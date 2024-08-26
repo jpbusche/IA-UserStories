@@ -1,7 +1,7 @@
 from src.reader import Reader
 from src.user_stories import UserStories
 
-path = "DocumentoDeVisaoInicial.pdf"
+path = "Wenova.md"
 reader = Reader(path)
 user_stories = UserStories()
 
