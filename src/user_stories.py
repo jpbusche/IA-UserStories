@@ -1,4 +1,5 @@
 import ollama
+import re
 from src.settings import MODEL
 
 
@@ -37,6 +38,8 @@ class UserStories:
         3. As a customer, I want to add a product to my shopping cart so that I can checkout later.
     """
 
+    USER_STORIES_REGEX = r"^\d{1,3}. (?P<user_storie>.+)"
+
     def format_prompt(self, context):
         return self.PROMPT.format(question=self.QUESTION, context=context)
     
@@ -44,8 +47,14 @@ class UserStories:
         return self.QUESTION
 
     def generate_user_stories(self, context):
+        user_stories = []
         message = {'role': 'user', 'content': self.format_prompt(context)}
         pre_response = ollama.chat(model=MODEL, messages=[message])
         reviewer_message = {'role': 'user', 'content': self.REVIEWER_PROMPT.format(context=pre_response['message']['content'])}
         response = ollama.chat(model=MODEL, messages=[reviewer_message])
-        return response['message']['content']
+        lines = response['message']['content'].split('\n')
+        for line in lines:
+            regex = re.search(self.USER_STORIES_REGEX, line)
+            if regex:
+                user_stories.append(regex.group('user_storie'))
+        return user_stories
