@@ -1,9 +1,10 @@
 import ollama
 import re
 from src.settings import MODEL
+from src.agents.agent import Agent
 
 
-class UserStories:
+class UserStories(Agent):
 
     QUESTION = """
         Thinking like a scrum master and experienced developer, your job is to create a list of atomic user stories for the development of a project. 
@@ -40,13 +41,7 @@ class UserStories:
 
     USER_STORIES_REGEX = r"^\d{1,3}. (?P<user_storie>.+)"
 
-    def format_prompt(self, context):
-        return self.PROMPT.format(question=self.QUESTION, context=context)
-    
-    def get_question(self):
-        return self.QUESTION
-
-    def generate_user_stories(self, context):
+    def generate_response(self, context):
         user_stories = []
         message = {'role': 'user', 'content': self.format_prompt(context)}
         pre_response = ollama.chat(model=MODEL, messages=[message])

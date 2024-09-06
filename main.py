@@ -1,20 +1,31 @@
 import sys
 from src.reader import Reader
-from src.user_stories import UserStories
+from src.agents.user_stories import UserStories
+from src.agents.tasks import Tasks
 
 
 user_stories_agent = UserStories()
+tasks = Tasks()
 
 def main():
     if len(sys.argv) < 2:
         raise Exception("Is necessary to pass a file path!")
     reader = Reader(sys.argv[1])
     user_stories = generate_user_stories(reader)
-    print(user_stories)
+    for user_storie in user_stories:
+        tasks = generate_tasks(reader, user_storie)
+        break
 
 def generate_user_stories(reader):
-    context = reader.get_context(user_stories_agent.get_question)
-    return user_stories_agent.generate_user_stories(context)
+    context = reader.get_context(user_stories_agent.get_question())
+    return user_stories_agent.generate_response(context)
+
+def generate_tasks(reader, user_storie):
+    tasks.format_question(user_storie)
+    print(tasks.get_question())
+    context = reader.get_context(tasks.get_question())
+    return tasks.generate_response(context)
+
 
 if __name__ == "__main__":
     main()
