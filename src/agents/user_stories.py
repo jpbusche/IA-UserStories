@@ -7,16 +7,16 @@ from src.agents.agent import Agent
 class UserStories(Agent):
 
     QUESTION = """
-        Thinking like a scrum master and experienced developer, your job is to create a list of atomic user stories for the development of a project. 
+        From previous context and thinking like a scrum master and experienced developer, your job is to create a list of atomic user stories for the development of a project. 
         User stories should cover all required functionality and should be written in the format: 'As a [type of user], I want [action], so that [benefit]'. 
         Make sure stories are independent, testable and have business value. 
         The answer need to be in the list format, with only the text of the user stories and only the user stories. Also the answer need to be in english.
     """
 
     PROMPT = """
-        {question}
-        
         Context: {context}
+    
+        {question}
 
         Example of Answer:
         1. As a customer, I want to register in the store, so that I can save my details for future purchases.
